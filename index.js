@@ -32,7 +32,10 @@ mf.comp.AppBase = class extends mf.Component {
             super.initDomConts();
             this.addChild(this.header());
             this.addChild(this.contents());
-            mf.func.addResizeWin(this.resizeEvent);
+            mf.func.addResizeWin(
+                this.resizeEvent,
+                this
+            );
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -112,10 +115,10 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
-    resizeEvent () {
+    resizeEvent (base) {
         try {
-            this.contents().style({
-                height : (window.innerHeight - lgn.header().height())+ 'px'
+            base.contents().style({
+                height : (window.innerHeight - base.header().height())+ 'px'
             });
         } catch (e) {
             console.error(e.stack);
