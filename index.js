@@ -36,6 +36,7 @@ mf.comp.AppBase = class extends mf.Component {
                 this.resizeEvent,
                 this
             );
+            this.target(this.contents().target());
         } catch (e) {
             console.error(e.stack);
             throw e;
