@@ -36,6 +36,7 @@ mf.comp.AppBase = class extends mf.Component {
                 this.resizeEvent,
                 this
             );
+            
             this.target(this.contents().target());
         } catch (e) {
             console.error(e.stack);
@@ -82,7 +83,6 @@ mf.comp.AppBase = class extends mf.Component {
                 throw new Error('invalid parameter');
             }
             hdr.url((null === hdr.url()) ? './' : undefined);
-            hdr.bind(false);
             if ( (true === this.target().isPushed()) &&
                  (undefined !== this.m_header) ) {
                 this.updChild(this.header(), hdr);
