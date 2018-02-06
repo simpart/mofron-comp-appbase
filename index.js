@@ -23,7 +23,7 @@ mf.comp.AppBase = class extends mf.Component {
     }
     
     /**
-     * initialize vdom
+     * initialize dom contents
      * 
      * @param prm : (string) text contents
      */
@@ -31,13 +31,35 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             super.initDomConts();
             this.addChild(this.header());
-            this.addChild(this.contents());
+            
+            let hei = window.innerHeight - this.header().height();
+            /* background */
+            let bg = new mf.Component({
+                style : { 'position' : 'fixed' },
+                height : hei
+            });
+            this.addChild(bg);
+            
+            /* contents */
+            let conts = new mf.Component({
+                height : hei
+            });
+            this.addChild(conts);
+            this.target(conts.target());
+            
             mf.func.addResizeWin(
-                this.resizeEvent,
+                (p) => {
+                    try {
+                        let hei = window.innerHeight - p.header().height();
+                        bg.height(hei);
+                        conts.height(hei);
+                    } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                },
                 this
             );
-            
-            this.target(this.contents().target());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -109,6 +131,9 @@ mf.comp.AppBase = class extends mf.Component {
                     height : (window.innerHeight - this.header().height())+ 'px'
                 }
             });
+            if (undefined !== this.m_conts) {
+                this.updChild(this.m_conts, cnt);
+            }
             this.m_conts = cnt;
         } catch (e) {
             console.error(e.stack);
@@ -116,11 +141,18 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
-    resizeEvent (base) {
+    background (val) {
         try {
-            base.contents().style({
-                height : (window.innerHeight - base.header().height())+ 'px'
-            });
+            if (undefined === val) {
+                /* getter */
+                return this.child()[1];
+            } 
+            /* setter */
+            if (true !== mf.func.isInclude(val, 'Component')) {
+                throw new Error('invalid parameter');
+            }
+            val.size('100%','100%');
+            this.child()[1].addChild(val);
         } catch (e) {
             console.error(e.stack);
             throw e;
