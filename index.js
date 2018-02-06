@@ -120,21 +120,10 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === cnt) {
                 /* getter */
-                if (undefined === this.m_conts) {
-                    this.contents(new mf.Component());
-                }
-                return this.m_conts;
+                return this.child()[2].child();
             }
             /* setter */
-            cnt.execOption({
-                style : {
-                    height : (window.innerHeight - this.header().height())+ 'px'
-                }
-            });
-            if (undefined !== this.m_conts) {
-                this.updChild(this.m_conts, cnt);
-            }
-            this.m_conts = cnt;
+            this.addChild(cnt);
         } catch (e) {
             console.error(e.stack);
             throw e;
