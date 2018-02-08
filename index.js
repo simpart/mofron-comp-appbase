@@ -1,5 +1,6 @@
 /**
  * @file   mofron-comp-appbase/index.js
+ * @brief  common application component for mofron
  * @author simpart
  */
 let mf = require("mofron");
@@ -7,29 +8,20 @@ let Header = require('mofron-comp-apphdr');
 
 /**
  * @class mofron.comp.AppBase
- * @brief application base page
+ * @brief common application component class
  */
 mf.comp.AppBase = class extends mf.Component {
-    
-    constructor (po) {
-        try {
-            super();
-            this.name('AppBase');
-            this.prmOpt(po);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
     
     /**
      * initialize dom contents
      * 
-     * @param prm : (string) text contents
+     * @param prm (text, mofron-comp-Text) title
      */
     initDomConts (prm) {
         try {
+            this.name('AppBase');
             super.initDomConts();
+            
             this.addChild(this.header());
             
             let hei = window.innerHeight - this.header().height();
@@ -41,9 +33,7 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(bg);
             
             /* contents */
-            let conts = new mf.Component({
-                height : hei
-            });
+            let conts = new mf.Component({height : hei});
             this.addChild(conts);
             this.target(conts.target());
             
@@ -60,6 +50,10 @@ mf.comp.AppBase = class extends mf.Component {
                 },
                 this
             );
+            
+            if (null !== prm) {
+                this.title(prm);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -80,11 +74,7 @@ mf.comp.AppBase = class extends mf.Component {
     
     title (ttl) {
         try {
-            if (undefined === ttl) {
-                /* getter */
-                return this.header().title();
-            }
-            this.header().title(ttl);
+            return this.header().title(ttl);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -164,3 +154,4 @@ mf.comp.AppBase = class extends mf.Component {
     }
 }
 module.exports = mofron.comp.AppBase;
+/* end of file */
