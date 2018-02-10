@@ -11,6 +11,16 @@ let Header = require('mofron-comp-apphdr');
  * @brief common application component class
  */
 mf.comp.AppBase = class extends mf.Component {
+    constructor (po) {
+        try {
+            super();
+            this.name('AppBase');
+            this.prmOpt(po);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
     
     /**
      * initialize dom contents
@@ -51,7 +61,7 @@ mf.comp.AppBase = class extends mf.Component {
                 this
             );
             
-            if (null !== prm) {
+            if (undefined !== prm) {
                 this.title(prm);
             }
         } catch (e) {
