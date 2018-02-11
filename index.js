@@ -29,7 +29,6 @@ mf.comp.AppBase = class extends mf.Component {
      */
     initDomConts (prm) {
         try {
-            this.name('AppBase');
             super.initDomConts();
             
             this.addChild(this.header());
@@ -43,8 +42,13 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(bg);
             
             /* contents */
-            let conts = new mf.Component({height : hei});
+            let conts = new mf.Component({
+                style  : { 'position' : 'relative',
+                           'z-index'  : 10 },
+                height : hei
+            });
             this.addChild(conts);
+
             this.target(conts.target());
             
             mf.func.addResizeWin(
@@ -120,7 +124,15 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === cnt) {
                 /* getter */
-                return this.child()[2].child();
+                let chd = this.child();
+                let ret = new Array();
+                for (let cidx in chd) {
+                    if (2 >= cidx) {
+                        continue;
+                    }
+                    ret.push(chd[cidx]);
+                }
+                return ret;
             }
             /* setter */
             this.addChild(cnt);
