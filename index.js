@@ -42,13 +42,8 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(bg);
             
             /* contents */
-            let conts = new mf.Component({
-                style  : { 'position' : 'relative',
-                           'z-index'  : 10 },
-                height : hei
-            });
+            let conts = new mf.Component({height : hei});
             this.addChild(conts);
-
             this.target(conts.target());
             
             mf.func.addResizeWin(
@@ -124,15 +119,7 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === cnt) {
                 /* getter */
-                let chd = this.child();
-                let ret = new Array();
-                for (let cidx in chd) {
-                    if (2 >= cidx) {
-                        continue;
-                    }
-                    ret.push(chd[cidx]);
-                }
-                return ret;
+                return this.child()[2].child();
             }
             /* setter */
             this.addChild(cnt);
@@ -166,7 +153,6 @@ mf.comp.AppBase = class extends mf.Component {
                 /* getter */
                 return this.header().color();
             }
-            /* setter */ 
             /* set header color */
             this.header().color(clr);
         } catch (e) {
