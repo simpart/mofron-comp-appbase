@@ -42,16 +42,20 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(bg);
             
             /* contents */
-            let conts = new mf.Component({height : hei});
+            let conts = new mf.Component({
+                style  : { 'position' : 'relative',
+                           'z-index'  : 10 },
+            });
             this.addChild(conts);
+
             this.target(conts.target());
             
             mf.func.addResizeWin(
                 (p) => {
                     try {
-                        let hei = window.innerHeight - p.header().height();
-                        bg.height(hei);
-                        conts.height(hei);
+                        bg.height(
+                            window.innerHeight - p.header().height()
+                        );
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
@@ -119,7 +123,15 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === cnt) {
                 /* getter */
-                return this.child()[2].child();
+                let chd = this.child();
+                let ret = new Array();
+                for (let cidx in chd) {
+                    if (2 >= cidx) {
+                        continue;
+                    }
+                    ret.push(chd[cidx]);
+                }
+                return ret;
             }
             /* setter */
             this.addChild(cnt);
@@ -153,6 +165,7 @@ mf.comp.AppBase = class extends mf.Component {
                 /* getter */
                 return this.header().color();
             }
+            /* setter */ 
             /* set header color */
             this.header().color(clr);
         } catch (e) {
