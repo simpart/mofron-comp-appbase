@@ -33,23 +33,18 @@ mf.comp.AppBase = class extends mf.Component {
             
             this.addChild(this.header());
             
-            let hei = window.innerHeight - this.header().height();
             /* background */
             let bg = new mf.Component({
-                style : { 'position' : 'fixed' },
-                height : hei
+                style  : { 'position' : 'fixed' },
+                height : window.innerHeight - this.header().height()
             });
             this.addChild(bg);
             
             /* contents */
-            let conts = new mf.Component({
-                style  : { 'position' : 'relative',
-                           'z-index'  : 10 },
-            });
-            this.addChild(conts);
-
-            this.target(conts.target());
+            this.addChild(this.contents());
+            this.target(this.contents().target());
             
+            /* sync height-length with window */
             mf.func.addResizeWin(
                 (p) => {
                     try {
@@ -67,6 +62,15 @@ mf.comp.AppBase = class extends mf.Component {
             if (undefined !== prm) {
                 this.title(prm);
             }
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    addLayout (lo) {
+        try {
+            return this.child()[2].addLayout(lo);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -123,15 +127,13 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === cnt) {
                 /* getter */
-                let chd = this.child();
-                let ret = new Array();
-                for (let cidx in chd) {
-                    if (2 >= cidx) {
-                        continue;
-                    }
-                    ret.push(chd[cidx]);
+                if (3 > this.child().length) {
+                    return new mf.Component({
+                        style  : { 'position' : 'fixed' },
+                        height : window.innerHeight - this.header().height()
+                    });
                 }
-                return ret;
+                return this.child()[2];
             }
             /* setter */
             this.addChild(cnt);
