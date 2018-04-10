@@ -129,8 +129,11 @@ mf.comp.AppBase = class extends mf.Component {
                 /* getter */
                 if (3 > this.child().length) {
                     return new mf.Component({
-                        style  : { 'position' : 'fixed' },
-                        height : window.innerHeight - this.header().height()
+                        style : { 'position' : 'fixed' },
+                        size  : new mf.Param(
+                                    '100%',
+                                    window.innerHeight - this.header().height()
+                                )
                     });
                 }
                 return this.child()[2];
