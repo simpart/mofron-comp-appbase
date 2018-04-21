@@ -48,9 +48,12 @@ mf.comp.AppBase = class extends mf.Component {
             mf.func.addResizeWin(
                 (p) => {
                     try {
-                        bg.height(
-                            window.innerHeight - p.header().height()
-                        );
+                        let set_hei = window.innerHeight - p.header().height();
+                        bg.height(set_hei);
+                        
+                        if (true === p.winHeight()) {
+                            p.contents().height(set_hei);
+                        }
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
@@ -152,6 +155,29 @@ mf.comp.AppBase = class extends mf.Component {
             }
             val.size('100%','100%');
             this.child()[1].addChild(val);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    winHeight (prm) {
+        try {
+            if (undefined === prm) {
+                /* getter */
+                return (undefined === this.m_winhei) ? false : this.m_winhei;
+            }
+            if ('boolean' !== typeof prm) {
+                throw new Error('invalid parameter');
+            }
+            if (true === prm) {
+                this.contents().height(
+                    window.innerHeight - this.header().height()
+                );
+            } else {
+                this.contents().height(null);
+            }
+            this.m_winhei = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
