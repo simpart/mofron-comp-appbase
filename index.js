@@ -41,8 +41,9 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(bg);
             
             /* contents */
-            this.addChild(this.contents());
-            this.target(this.contents().target());
+            let conts = new mf.Component({width : '100%'});
+            this.addChild(conts);
+            this.target(conts.target());
             
             /* sync height-length with window */
             mf.func.addResizeWin(
@@ -52,7 +53,7 @@ mf.comp.AppBase = class extends mf.Component {
                         bg.height(set_hei);
                         
                         if (true === p.winHeight()) {
-                            p.contents().height(set_hei);
+                            p.getChild(true)[2].height(set_hei);
                         }
                     } catch (e) {
                         console.error(e.stack);
@@ -65,15 +66,6 @@ mf.comp.AppBase = class extends mf.Component {
             if (undefined !== prm) {
                 this.title(prm);
             }
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    addLayout (lo) {
-        try {
-            return this.child()[2].addLayout(lo);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -126,35 +118,19 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
-    contents (cnt) {
-        try {
-            if (undefined === cnt) {
-                /* getter */
-                if (3 > this.child().length) {
-                    return new mf.Component({width : '100%'});
-                }
-                return this.child()[2];
-            }
-            /* setter */
-            this.addChild(cnt);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
     background (val) {
         try {
+            let bgd = this.getChild(true)[1];
             if (undefined === val) {
                 /* getter */
-                return this.child()[1];
+                return (0 === bgd.child().length) ? null : bgd.child()[0];
             } 
             /* setter */
             if (true !== mf.func.isInclude(val, 'Component')) {
                 throw new Error('invalid parameter');
             }
             val.size('100%','100%');
-            this.child()[1].addChild(val);
+            bgd.addChild(val);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -170,12 +146,14 @@ mf.comp.AppBase = class extends mf.Component {
             if ('boolean' !== typeof prm) {
                 throw new Error('invalid parameter');
             }
+            /* setter */
+            let conts = this.getChild(true)[2];
             if (true === prm) {
-                this.contents().height(
+                this.conts.height(
                     window.innerHeight - this.header().height()
                 );
             } else {
-                this.contents().height(null);
+                this.conts().height(null);
             }
             this.m_winhei = prm;
         } catch (e) {
