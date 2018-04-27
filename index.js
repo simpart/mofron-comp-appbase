@@ -162,15 +162,22 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
-    color (clr) {
+    color (clr, c2) {
         try {
-            if (undefined === clr) {
+            if ((undefined === clr) && (undefined === c2)) {
                 /* getter */
                 return this.header().color();
             }
             /* setter */ 
             /* set header color */
-            this.header().color(clr);
+            if (undefined !== clr) {
+                this.header().color(clr);
+            }
+            if (undefined !== c2) {
+                let bg = this.getChild(true)[1];
+                bg.width('100%');
+                bg.color(c2);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
