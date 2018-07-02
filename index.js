@@ -118,6 +118,15 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
+    hdrOption (opt) {
+        try {
+            this.header().execOption(opt);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
     background (val) {
         try {
             let bgd = this.getChild(true)[1];
