@@ -4,7 +4,8 @@
  * @author simpart
  */
 let mf = require("mofron");
-let Header = require('mofron-comp-apphdr');
+let Header = require('mofron-comp-appheader');
+let Image= require('mofron-comp-image');
 
 /**
  * @class mofron.comp.AppBase
@@ -27,34 +28,30 @@ mf.comp.AppBase = class extends mf.Component {
      * 
      * @param prm (text, mofron-comp-Text) title
      */
-    initDomConts (prm) {
+    initDomConts (ttl) {
         try {
             super.initDomConts();
             
+            if (undefined !== ttl) {
+                this.header().title(ttl);
+            }
             this.addChild(this.header());
             
-            /* background */
-            let bg = new mf.Component({
-                style  : { 'position' : 'fixed' },
-                height : window.innerHeight - this.header().height()
-            });
-            this.addChild(bg);
+            /* background area */
+            this.target().addChild(this.getBgTarget());
             
             /* contents */
             let conts = new mf.Component({width : '100%'});
             this.addChild(conts);
             this.target(conts.target());
             
+            this.height(window.innerHeight);
+            
             /* sync height-length with window */
-            mf.func.addResizeWin(
-                (p) => {
+            mf.func.rsizWinEvent(
+                (app) => {
                     try {
-                        let set_hei = window.innerHeight - p.header().height();
-                        bg.height(set_hei);
-                        
-                        if (true === p.winHeight()) {
-                            p.getChild(true)[2].height(set_hei);
-                        }
+                        app.background().height(window.innerHeight - app.header().height());
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
@@ -63,130 +60,92 @@ mf.comp.AppBase = class extends mf.Component {
                 this
             );
             
-            if (undefined !== prm) {
-                this.title(prm);
-            }
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    themeConts () {
+    header () {
         try {
-            let hdr = this.theme().component('mofron-comp-apphdr');
-            if (null !== hdr) {
-                this.header(hdr);
+            if (undefined === this.m_header) {
+                this.m_header = new Header({});
             }
+            return this.m_header;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    title (ttl) {
+    getBgTarget () {
         try {
-            return this.header().title(ttl);
+            if (undefined === this.m_bgtgt) {
+                this.m_bgtgt = new mf.Dom({
+                    tag       : 'div',
+                    component : this,
+                    style     : {
+                        'position' : 'fixed',
+                        'width'    : '100%'
+                    }
+                });
+            }
+            return this.m_bgtgt;
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    header (hdr) {
-        try {
-            if (undefined === hdr) {
-                /* getter */
-                if (undefined === this.m_header) {
-                    this.header(new Header());
-                }
-                return this.m_header;
-            }
-            /* setter */
-            if (true !== mf.func.isInclude(hdr, 'Ttlhdr')) {
-                throw new Error('invalid parameter');
-            }
-            hdr.url((null === hdr.url()) ? './' : undefined);
-            if ( (true === this.target().isPushed()) &&
-                 (undefined !== this.m_header) ) {
-                this.updChild(this.header(), hdr);
-            }
-            this.m_header = hdr;
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    hdrOption (opt) {
-        try {
-            this.header().execOption(opt);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    background (val) {
-        try {
-            let bgd = this.getChild(true)[1];
-            if (undefined === val) {
-                /* getter */
-                return (0 === bgd.child().length) ? null : bgd.child()[0];
-            } 
-            /* setter */
-            if (true !== mf.func.isInclude(val, 'Component')) {
-                throw new Error('invalid parameter');
-            }
-            val.size('100%','100%');
-            bgd.addChild(val);
-        } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    winHeight (prm) {
+    background (prm) {
         try {
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_winhei) ? false : this.m_winhei;
-            }
-            if ('boolean' !== typeof prm) {
-                throw new Error('invalid parameter');
+                return (undefined === this.m_backgd) ? null : this.m_backgd;
             }
             /* setter */
-            let conts = this.getChild(true)[2];
-            if (true === prm) {
-                this.conts.height(
-                    window.innerHeight - this.header().height()
-                );
-            } else {
-                this.conts().height(null);
+            if ('string' === typeof prm) {
+                prm = new Image(prm);
+            } else if (true !== mf.func.isInclude(prm, 'Image')) {
+                throw new Error('invalid parameter');
             }
-            this.m_winhei = prm;
+            prm.size('100%',window.innerHeight - this.header().height());
+            
+            let tgt_buf = this.target();
+            this.target(this.getBgTarget());
+            
+            if (null === this.background()) {
+                this.addChild(prm);
+            } else {
+                this.updChild(this.background(), prm);
+            }
+            this.m_backgd = prm;
+            this.target(tgt_buf);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    color (clr, c2) {
+    height (prm) {
         try {
-            if ((undefined === clr) && (undefined === c2)) {
+            if (undefined === prm) {
                 /* getter */
-                return this.header().color();
+                let hdr = this.header().height();
+                let cnt = super.height();
+                if (('number' === typeof hdr) && (cnt === typeof cnt)) {
+                    return hdr + cnt;
+                }
+                return cnt;
             }
-            /* setter */ 
-            /* set header color */
-            if (undefined !== clr) {
-                this.header().color(clr);
+            /* setter */
+            if ('number' === typeof prm) {
+                if (prm < this.header().height()) {
+                    throw new Error('invalid parameter');
+                }
+                prm = prm - this.header().height();
             }
-            if (undefined !== c2) {
-                let bg = this.getChild(true)[1];
-                bg.width('100%');
-                bg.color(c2);
-            }
+            super.height(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
