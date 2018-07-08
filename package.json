@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-appbase",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "application base component for mofron",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/simpart/mofron-comp-appbase.git"
   },
   "dependencies": {
-    "mofron-comp-apphdr" : ""
+    "mofron-comp-appheader" : ""
   },
   "keywords": [
     "front-end"
