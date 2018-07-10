@@ -45,13 +45,13 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(conts);
             this.target(conts.target());
             
-            this.height(window.innerHeight);
-            
             /* sync height-length with window */
             mf.func.rsizWinEvent(
                 (app) => {
                     try {
-                        app.background().height(window.innerHeight - app.header().height());
+                        if (null !== app.background()) {
+                            app.background().height(window.innerHeight - app.header().height());
+                        }
                     } catch (e) {
                         console.error(e.stack);
                         throw e;
