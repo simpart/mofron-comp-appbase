@@ -153,6 +153,15 @@ mf.comp.AppBase = class extends mf.Component {
             throw e;
         }
     }
+    
+    mainColor (prm) {
+        try {
+            return this.header().baseColor(prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 module.exports = mofron.comp.AppBase;
 /* end of file */
