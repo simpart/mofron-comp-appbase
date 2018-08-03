@@ -3,20 +3,23 @@
  * @brief  common application component for mofron
  * @author simpart
  */
-let mf = require("mofron");
-let Header = require('mofron-comp-appheader');
-let Image= require('mofron-comp-image');
+const mf     = require("mofron");
+const Header = require('mofron-comp-appheader');
+const Image  = require('mofron-comp-image');
+const Backgd = require('mofron-effect-backgd');
+const Synwin = require('mofron-effect-syncwin');
 
 /**
  * @class mofron.comp.AppBase
  * @brief common application component class
  */
 mf.comp.AppBase = class extends mf.Component {
-    constructor (po) {
+    constructor (po, p2) {
         try {
             super();
             this.name('AppBase');
-            this.prmOpt(po);
+            this.prmMap('title', 'addChild');
+            this.prmOpt(po, p2);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -28,13 +31,10 @@ mf.comp.AppBase = class extends mf.Component {
      * 
      * @param prm (text, mofron-comp-Text) title
      */
-    initDomConts (ttl) {
+    initDomConts () {
         try {
             super.initDomConts();
             
-            if (undefined !== ttl) {
-                this.header().title(ttl);
-            }
             this.addChild(this.header());
             
             /* background area */
@@ -45,25 +45,19 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(conts);
             this.target(conts.target());
             
-            /* sync height-length with window */
-            mf.func.rsizWinEvent(
-                (app) => {
-                    try {
-                        if (null !== app.background()) {
-                            app.background().height(window.innerHeight - app.header().height());
-                        }
-                    } catch (e) {
-                        console.error(e.stack);
-                        throw e;
-                    }
-                },
-                this
-            );
-            
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
+    }
+    
+    title (prm) {
+        try {
+            return this.header().title(prm);
+        } catch (e) {
+            console.error(e.stack);
+            throw e;
+        } 
     }
     
     header () {
@@ -104,23 +98,31 @@ mf.comp.AppBase = class extends mf.Component {
                 return (undefined === this.m_backgd) ? null : this.m_backgd;
             }
             /* setter */
-            if ('string' === typeof prm) {
-                prm = new Image(prm);
-            } else if (true !== mf.func.isInclude(prm, 'Image')) {
+            if (true !== mf.func.isInclude(prm, 'Component')) {
                 throw new Error('invalid parameter');
             }
-            prm.size('100%',window.innerHeight - this.header().height());
+            prm.effect([
+                new Backgd(),
+                new Synwin(false, true, null, 0 - this.header().height())
+            ]);
             
-            let tgt_buf = this.target();
-            this.target(this.getBgTarget());
-            
-            if (null === this.background()) {
-                this.addChild(prm);
-            } else {
-                this.updChild(this.background(), prm);
-            }
+            this.switchTgt(
+                this.getBgTarget(),
+                (abs) => {
+                    try {
+                        if (null === abs.background()) {
+                            abs.addChild(prm);
+                        } else {
+                            abs.updChild(abs.background(), prm);
+                        }
+                    } catch (e) {
+                        console.error(e.stack);
+                        throw e;
+                    }
+                },
+                this
+            );
             this.m_backgd = prm;
-            this.target(tgt_buf);
         } catch (e) {
             console.error(e.stack);
             throw e;
