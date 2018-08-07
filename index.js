@@ -18,7 +18,7 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             super();
             this.name('AppBase');
-            this.prmMap('title', 'addChild');
+            this.prmMap('title', 'child');
             this.prmOpt(po, p2);
         } catch (e) {
             console.error(e.stack);
@@ -41,7 +41,9 @@ mf.comp.AppBase = class extends mf.Component {
             this.target().addChild(this.getBgTarget());
             
             /* contents */
-            let conts = new mf.Component({width : '100%'});
+            let conts = new mf.Component({
+                width : new mf.Param(100, '%')
+            });
             this.addChild(conts);
             this.target(conts.target());
             
@@ -50,10 +52,18 @@ mf.comp.AppBase = class extends mf.Component {
             throw e;
         }
     }
-    
+
+
     title (prm) {
         try {
-            return this.header().title(prm);
+            if (undefined === prm) {
+                /* getter */
+                return this.header().title();
+            }
+            /* setter */
+            this.header().execOption({
+                title : prm
+            });
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -101,17 +111,19 @@ mf.comp.AppBase = class extends mf.Component {
             if (true !== mf.func.isInclude(prm, 'Component')) {
                 throw new Error('invalid parameter');
             }
-            prm.effect([
-                new Backgd(),
-                new Synwin(false, true, null, 0 - this.header().height())
-            ]);
+            prm.execOption({
+                effect : [
+                    new Backgd(),
+                    new Synwin(false, true, null, 0 - this.header().height())
+                ]
+            });
             
             this.switchTgt(
                 this.getBgTarget(),
                 (abs) => {
                     try {
                         if (null === abs.background()) {
-                            abs.addChild(prm);
+                            abs.child([prm]);
                         } else {
                             abs.updChild(abs.background(), prm);
                         }
