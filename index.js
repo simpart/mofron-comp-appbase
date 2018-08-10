@@ -42,7 +42,7 @@ mf.comp.AppBase = class extends mf.Component {
             
             /* contents */
             let conts = new mf.Component({
-                width : new mf.Param(100, '%')
+                width : '100%'
             });
             this.addChild(conts);
             this.target(conts.target());
@@ -114,7 +114,7 @@ mf.comp.AppBase = class extends mf.Component {
             prm.execOption({
                 effect : [
                     new Backgd(),
-                    new Synwin(false, true, null, 0 - this.header().height())
+                    new Synwin(false, true)
                 ]
             });
             
@@ -145,21 +145,27 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === prm) {
                 /* getter */
-                let hdr = this.header().height();
-                let cnt = super.height();
-                if (('number' === typeof hdr) && (cnt === typeof cnt)) {
-                    return hdr + cnt;
-                }
-                return cnt;
+                return mf.func.sizeSum(this.header().height(), super.height());
             }
             /* setter */
             if ('number' === typeof prm) {
-                if (prm < this.header().height()) {
-                    throw new Error('invalid parameter');
+                let hdr_hei = mofron.func.getSize(this.header().height());
+                if ( (this.sizeType() !== hdr_hei[1]) ||
+                     (0 > (prm - hdr_hei[0])) ) {
+                    super.height(prm);
+                    return;
                 }
-                prm = prm - this.header().height();
+                super.height(prm - hdr_hei[0]);
+            } else if ('string' === typeof prm) {
+                let dif_siz = mf.func.diffSize(prm, this.header().height());
+                if ((null === dif_siz) || (0 > mf.func.getSize(dif_siz)[0])) {
+                    super.height(prm);
+                } else {
+                    super.height(dif_siz);
+                }
+            } else {
+                throw new Error('invalid parameter');
             }
-            super.height(prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
