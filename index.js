@@ -148,16 +148,11 @@ mf.comp.AppBase = class extends mf.Component {
                 return mf.func.sizeSum(this.header().height(), super.height());
             }
             /* setter */
-            if ('string' === typeof prm) {
-                let dif_siz = mf.func.diffSize(prm, this.header().height());
-                if ((null === dif_siz) || (0 > mf.func.getSize(dif_siz)[0])) {
-                    super.height(prm);
-                } else {
-                    super.height(dif_siz);
-                }
-            } else {
+            let set_hei = mf.func.sizeDiff(prm, this.header().height());
+            if (0 > set_hei.value()) {
                 throw new Error('invalid parameter');
             }
+            super.height(set_hei);
         } catch (e) {
             console.error(e.stack);
             throw e;
