@@ -148,15 +148,7 @@ mf.comp.AppBase = class extends mf.Component {
                 return mf.func.sizeSum(this.header().height(), super.height());
             }
             /* setter */
-            if ('number' === typeof prm) {
-                let hdr_hei = mofron.func.getSize(this.header().height());
-                if ( (this.sizeType() !== hdr_hei[1]) ||
-                     (0 > (prm - hdr_hei[0])) ) {
-                    super.height(prm);
-                    return;
-                }
-                super.height(prm - hdr_hei[0]);
-            } else if ('string' === typeof prm) {
+            if ('string' === typeof prm) {
                 let dif_siz = mf.func.diffSize(prm, this.header().height());
                 if ((null === dif_siz) || (0 > mf.func.getSize(dif_siz)[0])) {
                     super.height(prm);
