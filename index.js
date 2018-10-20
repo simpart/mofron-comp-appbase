@@ -14,11 +14,18 @@ const Synwin = require('mofron-effect-syncwin');
  * @brief common application component class
  */
 mf.comp.AppBase = class extends mf.Component {
+    /**
+     * initialize component
+     *
+     * @param p1 (hash object) set option
+     * @param p1 (string) set app title
+     * @param p2 (Component Object) child component
+     */
     constructor (po, p2) {
         try {
             super();
             this.name('AppBase');
-            this.prmMap('title', 'child');
+            this.prmMap(['title', 'child']);
             this.prmOpt(po, p2);
         } catch (e) {
             console.error(e.stack);
@@ -29,7 +36,7 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * initialize dom contents
      * 
-     * @param prm (text, mofron-comp-Text) title
+     * @note private method
      */
     initDomConts () {
         try {
@@ -38,12 +45,10 @@ mf.comp.AppBase = class extends mf.Component {
             this.addChild(this.header());
             
             /* background area */
-            this.target().addChild(this.getBgTarget());
+            this.addChild(this.bgwrap());
             
             /* contents */
-            let conts = new mf.Component({
-                width : '100%'
-            });
+            let conts = new mf.Component({ width : '100%'});
             this.addChild(conts);
             this.target(conts.target());
             
@@ -53,88 +58,81 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
 
-
+    /**
+     * setter/getter app title (header text)
+     *
+     * @param p1 (string) app title
+     * @param p1 (undefined) call as app title
+     * @return (string) app title
+     */
     title (prm) {
-        try {
-            if (undefined === prm) {
-                /* getter */
-                return this.header().title();
-            }
-            /* setter */
-            this.header().execOption({
-                title : prm
-            });
-        } catch (e) {
+        try { return this.header().title(prm); } catch (e) {
             console.error(e.stack);
             throw e;
         } 
     }
     
-    header () {
-        try {
-            if (undefined === this.m_header) {
-                this.m_header = new Header({});
-            }
-            return this.m_header;
-        } catch (e) {
+    /**
+     * setter/getter app header
+     */
+    header (prm) {
+        try { return this.innerComp('header', prm, Header); } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
-    getBgTarget () {
+    /**
+     * setter/getter background wrapper
+     *
+     * @param p1 (Component) background wrapper component
+     * @param p1 (undefined) call ass getter
+     * @return (Component) background wrapper component
+     * @note private method
+     */
+    bgwrap (prm) {
         try {
-            if (undefined === this.m_bgtgt) {
-                this.m_bgtgt = new mf.Dom({
-                    tag       : 'div',
-                    component : this,
-                    style     : {
-                        'position' : 'fixed',
-                        'width'    : '100%'
+            if (true === mf.func.isInclude(prm, 'Component')) {
+                prm.execOption({
+                    style : {
+                        'position' : 'relative',
+                        'z-index'  : '-10'
                     }
                 });
             }
-            return this.m_bgtgt;
+            return this.innerComp('bgwrap', prm, mf.Component);
         } catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
     
+    /**
+     * setter/getter background component
+     * height is synchronized with window height by auto
+     * 
+     * @param p1 (Component) background component
+     * @param p1 (undefined) call ass getter
+     * @return (Component) background component
+     */
     background (prm) {
         try {
             if (undefined === prm) {
                 /* getter */
-                return (undefined === this.m_backgd) ? null : this.m_backgd;
+                return this.bgwrap().child();
             }
             /* setter */
-            if (true !== mf.func.isInclude(prm, 'Component')) {
-                throw new Error('invalid parameter');
-            }
+            this.bgwrap().child(prm);
             prm.execOption({
                 effect : [
                     new Backgd(),
-                    new Synwin(false, true)
+                    new Synwin({
+                        xflag : false,
+                        yflag : true,
+                        yofs  : '-' + this.header().height()
+                    })
                 ]
             });
-            
-            this.switchTgt(
-                this.getBgTarget(),
-                (abs) => {
-                    try {
-                        if (null === abs.background()) {
-                            abs.child([prm]);
-                        } else {
-                            abs.updChild(abs.background(), prm);
-                        }
-                    } catch (e) {
-                        console.error(e.stack);
-                        throw e;
-                    }
-                },
-                this
-            );
-            this.m_backgd = prm;
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -159,10 +157,16 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
+    /**
+     * setter/getter header color
+     *
+     * @param p1 (string) color value (css)
+     * @param p1 (Array) [red(0-255), green(0-255), blue(0-255)]
+     * @param p1 (undefined) call as getter
+     * @return (string) color value (css)
+     */
     mainColor (prm) {
-        try {
-            return this.header().baseColor(prm);
-        } catch (e) {
+        try { return this.header().baseColor(prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }

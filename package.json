@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-appbase",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "application base component for mofron",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "front-end"
   ],
   "author": "simparts",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/simpart/mofron-comp-appbase/issues"
   },
