@@ -119,7 +119,8 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === prm) {
                 /* getter */
-                return this.bgwrap().child();
+                let ret = this.bgwrap().child();
+                return (0 === ret.length) ? null : ret[0];
             }
             /* setter */
             this.bgwrap().child(prm);
@@ -167,6 +168,32 @@ mf.comp.AppBase = class extends mf.Component {
      */
     mainColor (prm) {
         try { return this.header().baseColor(prm); } catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    /**
+     * background base color setter/getter
+     *
+     * @param p1 (string) color value (css)
+     * @param p1 (Array) [red(0-255), green(0-255), blue(0-255)]
+     * @param p1 (undefined) call as getter
+     * @return (string) color value (css)
+     */
+    baseColor (prm) {
+        try {
+            let bg = this.background();
+            if (undefined === prm) {
+                /* getter */
+                return (null !== bg) ? bg.baseColor() : null;
+            }
+            /* setter */
+            if (null === bg) {
+                this.background(new mf.Component());
+            }
+            this.background().execOption({ baseColor : prm });
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
