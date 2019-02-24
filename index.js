@@ -127,11 +127,7 @@ mf.comp.AppBase = class extends mf.Component {
             prm.execOption({
                 effect : [
                     new Backgd(),
-                    new Synwin({
-                        xflag : false,
-                        yflag : true,
-                        yofs  : '-' + this.header().height()
-                    })
+                    new Synwin([false, true], [0, '-' + this.header().height()])
                 ]
             });
         } catch (e) {
@@ -150,11 +146,7 @@ mf.comp.AppBase = class extends mf.Component {
             let set_hei = mf.func.getSize(
                 mf.func.sizeDiff(prm, this.header().height())
             );
-            if (0 > set_hei.value()) {
-                super.height(prm);
-            } else {
-                super.height(set_hei);
-            }
+            super.height((0 > set_hei.value()) ? prm : set_hei);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -195,7 +187,7 @@ mf.comp.AppBase = class extends mf.Component {
             if (null === bg) {
                 this.background(new mf.Component());
             }
-            this.background().execOption({ baseColor : prm });
+            this.background().option({ baseColor : prm });
         } catch (e) {
             console.error(e.stack);
             throw e;
