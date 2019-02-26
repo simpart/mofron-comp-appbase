@@ -124,10 +124,17 @@ mf.comp.AppBase = class extends mf.Component {
             }
             /* setter */
             this.bgwrap().child(prm);
-            prm.execOption({
+            let hrd_ofs = mf.func.getSize(this.header().height());
+            if ( (true === mf.func.isInclude(hrd_ofs, 'Rem')) ||
+                 (true === mf.func.isInclude(hrd_ofs, 'Pixel')) ) {
+                hrd_ofs = parseInt('-' + hrd_ofs.toPxnum());
+            } else {
+                hrd_ofs = 0;
+            }
+            prm.option({
                 effect : [
                     new Backgd(),
-                    new Synwin([false, true], [0, '-' + this.header().height()])
+                    new Synwin([false, true], [0, hrd_ofs])
                 ]
             });
         } catch (e) {
