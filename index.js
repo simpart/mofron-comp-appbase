@@ -43,15 +43,13 @@ mf.comp.AppBase = class extends mf.Component {
             super.initDomConts();
             
             this.addChild(this.header());
-            
             /* background area */
             this.addChild(this.bgwrap());
             
             /* contents */
-            let conts = new mf.Component({ width : '100%'});
+            let conts = new mf.Component({ width : '100%' });
             this.addChild(conts);
             this.target(conts.target());
-            
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -65,8 +63,14 @@ mf.comp.AppBase = class extends mf.Component {
      * @param p1 (undefined) call as app title
      * @return (string) app title
      */
-    title (prm) {
-        try { return this.header().title(prm); } catch (e) {
+    title (prm, lg) {
+        try {
+            let ret = this.header().title(prm);
+            if (undefined !== lg) {
+                this.header().logo(lg);
+            }
+            return ret;
+        } catch (e) {
             console.error(e.stack);
             throw e;
         } 
@@ -93,7 +97,7 @@ mf.comp.AppBase = class extends mf.Component {
     bgwrap (prm) {
         try {
             if (true === mf.func.isInclude(prm, 'Component')) {
-                prm.execOption({
+                prm.option({
                     style : {
                         'position' : 'relative',
                         'z-index'  : '-10'
@@ -132,10 +136,7 @@ mf.comp.AppBase = class extends mf.Component {
                 hrd_ofs = 0;
             }
             prm.option({
-                effect : [
-                    new Backgd(),
-                    new Synwin([false, true], [0, hrd_ofs])
-                ]
+                effect : [ new Backgd(), new Synwin([false, true], [0, hrd_ofs]) ]
             });
         } catch (e) {
             console.error(e.stack);
@@ -185,16 +186,11 @@ mf.comp.AppBase = class extends mf.Component {
      */
     baseColor (prm) {
         try {
-            let bg = this.background();
+            let cnt = this.getChild(true)[2]; 
             if (undefined === prm) {
-                /* getter */
-                return (null !== bg) ? bg.baseColor() : null;
+                cnt.style('background');
             }
-            /* setter */
-            if (null === bg) {
-                this.background(new mf.Component());
-            }
-            this.background().option({ baseColor : prm });
+            mf.func.setColor(cnt, 'background', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
