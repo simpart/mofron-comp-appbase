@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-appbase",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "application base component for mofron",
   "main": "index.js",
   "scripts": {

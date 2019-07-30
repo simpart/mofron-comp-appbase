@@ -190,7 +190,7 @@ mf.comp.AppBase = class extends mf.Component {
             if (undefined === prm) {
                 cnt.style('background');
             }
-            mf.func.setColor(cnt, 'background', prm);
+            mf.func.cmpColor(cnt, 'background', prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
