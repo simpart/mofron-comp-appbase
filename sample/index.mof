@@ -1,0 +1,10 @@
+<require>
+    <tag module="mofron-comp-image">Image</tag>
+    <tag module="mofron-comp-appbase">AppBase</tag>
+</require>
+
+<AppBase mainColor=#f0e6fa title=mofron>
+    <background>
+        <Image>./img/mofron_tp2.png</Image>
+    </background>
+</AppBase>

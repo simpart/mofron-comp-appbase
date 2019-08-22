@@ -1,27 +1,41 @@
-# mofron-comp-appbase
-this is application base component for mofron.<br>
-please see [here](https://github.com/mofron/mofron) about an overview of mofron
+#   mofron-comp-appbase
+[mofron](https://mofron.github.io/mofron/) is module based frontend framework.
+
+ common application component for mofron
+
+ it makes easy to build page.
+
 
 # Install
-
-```bash
-npm install mofron-comp-appbase
+```
+npm install mofron mofron-comp-appbase
 ```
 
-# Quick Start
+# Sample
+```html
+<require>
+    <tag module="mofron-comp-image">Image</tag>
+    <tag module="mofron-comp-appbase">AppBase</tag>
+</require>
 
-```javascript
-require('mofron');
-let App = require('mofron-comp-appbase');
-new App({
-    title : 'Test App Title',
-    visible : true
-});
+<AppBase mainColor=#f0e6fa title=mofron>
+    <background>
+        <Image>./img/mofron.png</Image>
+    </background>
+</AppBase>
 ```
+# Parameter
 
-# Class Specification
-| Method          | Parameter                                                                    |    Description                  |
-|:------------------|:-----------------------------------------------------------------|:-------------------------------|
-| title | string,<br>text component     |application title.<br> this parameter is displayed in the page header. |
-| header | header component | replace header component.<br>default header component is [mofron-comp-apphdr](https://github.com/simpart/mofron-comp-apphdr).|
-| color | color object | color setter/getter.<br> it change header color if you called this as setter.<br>you must not specify any parameter if you call this as getter.  |
+|Simple<br>Param | Parameter Name | Type | Description |
+|:--------------:|:---------------|:-----|:------------|
+|◯ | title | string/Text | app title |
+| | | string/Image | string: path to app logo image |
+| | | | Image: logo image |
+| | header | Header | header component |
+| | background | Component | background component |
+| | height | string | height size |
+| | mainColor | string/Array | string: color,#hex |
+| | | | Array: r,g,b |
+| | baseColor | string/Array | string: color,#hex |
+| | | | Array: r,g,b |
+

@@ -1,6 +1,7 @@
 /**
  * @file   mofron-comp-appbase/index.js
  * @brief  common application component for mofron
+ *         it makes easy to build page.
  * @author simpart
  */
 const mf     = require("mofron");
@@ -9,17 +10,14 @@ const Image  = require('mofron-comp-image');
 const Backgd = require('mofron-effect-backgd');
 const Synwin = require('mofron-effect-syncwin');
 
-/**
- * @class mofron.comp.AppBase
- * @brief common application component class
- */
 mf.comp.AppBase = class extends mf.Component {
     /**
      * initialize component
      *
-     * @param p1 (hash object) set option
-     * @param p1 (string) set app title
-     * @param p2 (Component Object) child component
+     * @param (string) title parameter
+     * @param (Component) child component
+     * @pmap title,child
+     * @type private
      */
     constructor (po, p2) {
         try {
@@ -36,7 +34,7 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * initialize dom contents
      * 
-     * @note private method
+     * @type private
      */
     initDomConts () {
         try {
@@ -57,11 +55,13 @@ mf.comp.AppBase = class extends mf.Component {
     }
 
     /**
-     * setter/getter app title (header text)
+     * set app title (header text)
      *
-     * @param p1 (string) app title
-     * @param p1 (undefined) call as app title
-     * @return (string) app title
+     * @param (string/Text) app title
+     * @param (string/Image) string: path to app logo image
+     *                       Image: logo image
+     * @return (Text) app title
+     * @type parameter
      */
     title (prm, lg) {
         try {
@@ -77,7 +77,10 @@ mf.comp.AppBase = class extends mf.Component {
     }
     
     /**
-     * setter/getter app header
+     * app header
+     * 
+     * @param (Header) header component
+     * @type parameter
      */
     header (prm) {
         try { return this.innerComp('header', prm, Header); } catch (e) {
@@ -87,12 +90,11 @@ mf.comp.AppBase = class extends mf.Component {
     }
     
     /**
-     * setter/getter background wrapper
+     * background wrapper
      *
-     * @param p1 (Component) background wrapper component
-     * @param p1 (undefined) call ass getter
+     * @param (Component) background wrapper component
      * @return (Component) background wrapper component
-     * @note private method
+     * @type private
      */
     bgwrap (prm) {
         try {
@@ -112,12 +114,12 @@ mf.comp.AppBase = class extends mf.Component {
     }
     
     /**
-     * setter/getter background component
+     * background component
      * height is synchronized with window height by auto
      * 
-     * @param p1 (Component) background component
-     * @param p1 (undefined) call ass getter
+     * @param (Component) background component
      * @return (Component) background component
+     * @type parameter
      */
     background (prm) {
         try {
@@ -136,7 +138,7 @@ mf.comp.AppBase = class extends mf.Component {
                 hrd_ofs = 0;
             }
             prm.option({
-                effect : [ new Backgd(), new Synwin([false, true], [0, hrd_ofs]) ]
+                effect : [ new Backgd(), new Synwin([false, true], ["0rem", hrd_ofs + "rem"]) ]
             });
         } catch (e) {
             console.error(e.stack);
@@ -144,6 +146,13 @@ mf.comp.AppBase = class extends mf.Component {
         }
     }
     
+    /**
+     * height
+     * 
+     * @param (string) height size
+     * @return (string) height size
+     * @type parameter
+     */
     height (prm) {
         try {
             if (undefined === prm) {
@@ -151,9 +160,19 @@ mf.comp.AppBase = class extends mf.Component {
                 return mf.func.sizeSum(this.header().height(), super.height());
             }
             /* setter */
+	    opt = undefined;
+	    if (true === Array.isArray(prm)) {
+	        opt = prm[1];
+		prm = prm[0];
+	    }
             let set_hei = mf.func.getSize(
                 mf.func.sizeDiff(prm, this.header().height())
             );
+	    if (undefined !== opt) {
+	        super.height((0 > set_hei.value()) ? [prm,opt] : [set_hei,opt]);
+	    } else {
+	        super.height((0 > set_hei.value()) ? prm : set_hei);
+	    }
             super.height((0 > set_hei.value()) ? prm : set_hei);
         } catch (e) {
             console.error(e.stack);
@@ -163,11 +182,11 @@ mf.comp.AppBase = class extends mf.Component {
     
     /**
      * setter/getter header color
-     *
-     * @param p1 (string) color value (css)
-     * @param p1 (Array) [red(0-255), green(0-255), blue(0-255)]
-     * @param p1 (undefined) call as getter
-     * @return (string) color value (css)
+     * 
+     * @param (string/Array) string: color,#hex
+     *                       Array: r,g,b
+     * @return (string) color
+     * @type parameter
      */
     mainColor (prm) {
         try { return this.header().baseColor(prm); } catch (e) {
@@ -179,19 +198,13 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * background base color setter/getter
      *
-     * @param p1 (string) color value (css)
-     * @param p1 (Array) [red(0-255), green(0-255), blue(0-255)]
-     * @param p1 (undefined) call as getter
-     * @return (string) color value (css)
+     * @param (string/Array) string: color,#hex
+     *                       Array: r,g,b
+     * @return (string) color
+     * @type parameter
      */
     baseColor (prm) {
-        try {
-            let cnt = this.getChild(true)[2]; 
-            if (undefined === prm) {
-                cnt.style('background');
-            }
-            mf.func.cmpColor(cnt, 'background', prm);
-        } catch (e) {
+        try { return mf.func.cmpColor(this, 'background', prm); } catch (e) {
             console.error(e.stack);
             throw e;
         }
