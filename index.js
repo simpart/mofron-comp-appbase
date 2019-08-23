@@ -138,7 +138,7 @@ mf.comp.AppBase = class extends mf.Component {
                 hrd_ofs = 0;
             }
             prm.option({
-                effect : [ new Backgd(), new Synwin([false, true], ["0rem", hrd_ofs + "rem"]) ]
+                effect : [ new Backgd(), new Synwin([true, true], ["0px", hrd_ofs + "px"]) ]
             });
         } catch (e) {
             console.error(e.stack);
