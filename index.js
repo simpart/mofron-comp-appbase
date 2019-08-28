@@ -166,7 +166,7 @@ mf.comp.AppBase = class extends mf.Component {
             let set_hei = mf.func.getSize(
                 mf.func.sizeDiff(prm, this.header().height())
             );
-            super.height((0 > set_hei.value()) ? [prm,opt] : [set_hei,opt]);
+	    super.height((0 > set_hei.value()) ? prm : set_hei,opt);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -198,7 +198,7 @@ mf.comp.AppBase = class extends mf.Component {
      * @return (string) color
      * @type parameter
      */
-    baseColor (prm) {
+    baseColor (prm, opt) {
         try { return mf.func.cmpColor(this, 'background', [prm,opt]); } catch (e) {
             console.error(e.stack);
             throw e;
