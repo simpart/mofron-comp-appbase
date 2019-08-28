@@ -3,8 +3,8 @@
     <tag module="mofron-comp-appbase">AppBase</tag>
 </require>
 
-<AppBase mainColor=#f0e6fa title=mofron>
+<AppBase title=AppBase,"./img/logo.png">
     <background>
-        <Image>./img/mofron_tp2.png</Image>
+        <Image>./img/mofron.png</Image>
     </background>
 </AppBase>

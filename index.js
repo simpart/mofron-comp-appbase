@@ -14,8 +14,9 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * initialize component
      *
-     * @param (string) title parameter
-     * @param (Component) child component
+     * @param (mixed) title parameter
+     *                object: component option
+     * @param (component) child component
      * @pmap title,child
      * @type private
      */
@@ -57,10 +58,10 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * set app title (header text)
      *
-     * @param (string/Text) app title
-     * @param (string/Image) string: path to app logo image
-     *                       Image: logo image
-     * @return (Text) app title
+     * @param (mixed) string/mofron-comp-text: app title
+     * @param (mixed) string: path to app logo image
+     *                mofron-comp-image: logo image
+     * @return (mofron-comp-text) app title
      * @type parameter
      */
     title (prm, lg) {
@@ -79,7 +80,8 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * app header
      * 
-     * @param (Header) header component
+     * @param (mofron-comp-header) header component
+     * @return (mofron-comp-header) header component
      * @type parameter
      */
     header (prm) {
@@ -92,8 +94,8 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * background wrapper
      *
-     * @param (Component) background wrapper component
-     * @return (Component) background wrapper component
+     * @param (component) background wrapper component
+     * @return (component) background wrapper component
      * @type private
      */
     bgwrap (prm) {
@@ -117,8 +119,8 @@ mf.comp.AppBase = class extends mf.Component {
      * background component
      * height is synchronized with window height by auto
      * 
-     * @param (Component) background component
-     * @return (Component) background component
+     * @param (component) background component
+     * @return (component) background component
      * @type parameter
      */
     background (prm) {
@@ -149,31 +151,22 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * height
      * 
-     * @param (string) height size
+     * @param (string (size)) height size
+     * @param (option) style option
      * @return (string) height size
      * @type parameter
      */
-    height (prm) {
+    height (prm, opt) {
         try {
             if (undefined === prm) {
                 /* getter */
                 return mf.func.sizeSum(this.header().height(), super.height());
             }
             /* setter */
-	    opt = undefined;
-	    if (true === Array.isArray(prm)) {
-	        opt = prm[1];
-		prm = prm[0];
-	    }
             let set_hei = mf.func.getSize(
                 mf.func.sizeDiff(prm, this.header().height())
             );
-	    if (undefined !== opt) {
-	        super.height((0 > set_hei.value()) ? [prm,opt] : [set_hei,opt]);
-	    } else {
-	        super.height((0 > set_hei.value()) ? prm : set_hei);
-	    }
-            super.height((0 > set_hei.value()) ? prm : set_hei);
+            super.height((0 > set_hei.value()) ? [prm,opt] : [set_hei,opt]);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -183,13 +176,14 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * setter/getter header color
      * 
-     * @param (string/Array) string: color,#hex
-     *                       Array: r,g,b
+     * @param (mixed (color)) string: color name, #hex
+     *                        array: [red, green, blue, alpha]
+     * @param (option) style option
      * @return (string) color
      * @type parameter
      */
-    mainColor (prm) {
-        try { return this.header().baseColor(prm); } catch (e) {
+    mainColor (prm, opt) {
+        try { return this.header().baseColor(prm,opt); } catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -198,13 +192,14 @@ mf.comp.AppBase = class extends mf.Component {
     /**
      * background base color setter/getter
      *
-     * @param (string/Array) string: color,#hex
-     *                       Array: r,g,b
+     * @param (mixed (color)) string: color name, #hex
+     *                        array: [red, green, blue, alpha]
+     * @param (option) style option
      * @return (string) color
      * @type parameter
      */
     baseColor (prm) {
-        try { return mf.func.cmpColor(this, 'background', prm); } catch (e) {
+        try { return mf.func.cmpColor(this, 'background', [prm,opt]); } catch (e) {
             console.error(e.stack);
             throw e;
         }

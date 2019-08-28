@@ -3,12 +3,12 @@
 
  common application component for mofron
 
- it makes easy to build page.
+it makes easy to build page.
 
 
 # Install
 ```
-npm install mofron mofron-comp-appbase
+npm install mofron   mofron-comp-appbase
 ```
 
 # Sample
@@ -18,7 +18,7 @@ npm install mofron mofron-comp-appbase
     <tag module="mofron-comp-appbase">AppBase</tag>
 </require>
 
-<AppBase mainColor=#f0e6fa title=mofron>
+<AppBase title=AppBase,"./img/logo.png">
     <background>
         <Image>./img/mofron.png</Image>
     </background>
@@ -28,14 +28,17 @@ npm install mofron mofron-comp-appbase
 
 |Simple<br>Param | Parameter Name | Type | Description |
 |:--------------:|:---------------|:-----|:------------|
-|◯ | title | string/Text | app title |
-| | | string/Image | string: path to app logo image |
-| | | | Image: logo image |
-| | header | Header | header component |
-| | background | Component | background component |
-| | height | string | height size |
-| | mainColor | string/Array | string: color,#hex |
-| | | | Array: r,g,b |
-| | baseColor | string/Array | string: color,#hex |
-| | | | Array: r,g,b |
+| | title | mixed | string/mofron-comp-text: app title |
+| | | mixed | string: path to app logo image |
+| | | | mofron-comp-image: logo image |
+| | header | mofron-comp-header | header component |
+| | background | component | background component |
+| | height | string (size) | height size |
+| | | option | style option |
+| | mainColor | mixed (color) | string: color name, #hex |
+| | | | array: [red, green, blue, alpha] |
+| | | option | style option |
+| | baseColor | mixed (color) | string: color name, #hex |
+| | | | array: [red, green, blue, alpha] |
+| | | option | style option |
 
