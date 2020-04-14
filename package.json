@@ -1,6 +1,6 @@
 {
   "name": "mofron-comp-appbase",
-  "version": "0.4.14",
+  "version": "0.5.0",
   "description": "application base component for mofron",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "mofron-effect-syncwin" : ""
   },
   "keywords": [
-    "front-end"
+    "front-end", "mofron"
   ],
   "author": "simparts",
   "license": "MIT",

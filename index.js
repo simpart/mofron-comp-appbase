@@ -2,30 +2,33 @@
  * @file   mofron-comp-appbase/index.js
  * @brief  common application component for mofron
  *         it makes easy to build page.
- * @author simpart
+ * @license MIT
  */
-const mf     = require("mofron");
-const Header = require('mofron-comp-appheader');
-const Image  = require('mofron-comp-image');
-const Backgd = require('mofron-effect-backgd');
-const Synwin = require('mofron-effect-syncwin');
+const Header  = require('mofron-comp-appheader');
+const Image   = require('mofron-comp-image');
+const Backgd  = require('mofron-effect-backgd');
+const Synwin  = require('mofron-effect-syncwin');
+const comutl  = mofron.util.common;
 
-mf.comp.AppBase = class extends mf.Component {
+module.exports = class extends mofron.class.Component {
     /**
      * initialize component
      *
      * @param (mixed) title parameter
-     *                object: component option
+     *                dict: component config list
      * @param (component) child component
-     * @pmap title,child
+     * @short title,child
      * @type private
      */
-    constructor (po, p2) {
+    constructor (p1, p2) {
         try {
             super();
-            this.name('AppBase');
-            this.prmMap(['title', 'child']);
-            this.prmOpt(po, p2);
+            this.name("AppBase");
+            this.shortForm("title", "child");
+	    
+	    if (0 < arguments.length) {
+                this.config(p1,p2);
+            }
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -41,14 +44,13 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             super.initDomConts();
             
-            this.addChild(this.header());
-            /* background area */
-            this.addChild(this.bgwrap());
+	    this.header(new Header());
+	    this.bgwrap(new mofron.class.Component());
+	    let conts = new mofron.class.Component({ width : '100%' });
+
+            this.child([this.header(), this.bgwrap(), conts]);
+            this.childDom(conts.childDom());
             
-            /* contents */
-            let conts = new mf.Component({ width : '100%' });
-            this.addChild(conts);
-            this.target(conts.target());
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -64,19 +66,19 @@ mf.comp.AppBase = class extends mf.Component {
      * @return (mofron-comp-text) app title
      * @type parameter
      */
-    title (prm, lg) {
+    title (prm, img) {
         try {
             let ret = this.header().title(prm);
-            if (undefined !== lg) {
-                this.header().logo(lg);
-            }
-            return ret;
+            if (undefined === prm) {
+                return ret;
+	    }
+	    this.header().image(img);
         } catch (e) {
             console.error(e.stack);
             throw e;
         } 
     }
-    
+
     /**
      * app header
      * 
@@ -85,7 +87,9 @@ mf.comp.AppBase = class extends mf.Component {
      * @type parameter
      */
     header (prm) {
-        try { return this.innerComp('header', prm, Header); } catch (e) {
+        try {
+	    return this.innerComp('header', prm);
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -100,15 +104,10 @@ mf.comp.AppBase = class extends mf.Component {
      */
     bgwrap (prm) {
         try {
-            if (true === mf.func.isInclude(prm, 'Component')) {
-                prm.option({
-                    style : {
-                        'position' : 'relative',
-                        'z-index'  : '-10'
-                    }
-                });
+            if (true === comutl.isinc(prm, "Component")) {
+                prm.style({ "position": "relative", "z-index": "-10" });
             }
-            return this.innerComp('bgwrap', prm, mf.Component);
+            return this.innerComp("bgwrap", prm);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -132,16 +131,10 @@ mf.comp.AppBase = class extends mf.Component {
             }
             /* setter */
             this.bgwrap().child(prm);
-            let hrd_ofs = mf.func.getSize(this.header().height());
-            if ( (true === mf.func.isInclude(hrd_ofs, 'Rem')) ||
-                 (true === mf.func.isInclude(hrd_ofs, 'Pixel')) ) {
-                hrd_ofs = parseInt('-' + hrd_ofs.toPxnum());
-            } else {
-                hrd_ofs = 0;
-            }
-            prm.option({
-                effect : [ new Backgd(), new Synwin([true, true], ["0px", hrd_ofs + "px"]) ]
-            });
+	    cmputl.rstyle(prm, { 'position' : 'fixed' });
+            let off = comutl.getsize(this.header().height());
+	    off = (null !== off) ? '-' + off.toPixel() + 'px' : undefined;
+            prm.config({ effect : new Synwin({ y_offset: off }) });
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -152,7 +145,7 @@ mf.comp.AppBase = class extends mf.Component {
      * height
      * 
      * @param (string (size)) height size
-     * @param (option) style option
+     * @param (dict) style option
      * @return (string) height size
      * @type parameter
      */
@@ -160,11 +153,11 @@ mf.comp.AppBase = class extends mf.Component {
         try {
             if (undefined === prm) {
                 /* getter */
-                return mf.func.sizeSum(this.header().height(), super.height());
+                return comutl.sizesum(this.header().height(), super.height());
             }
             /* setter */
-            let set_hei = mf.func.getSize(
-                mf.func.sizeDiff(prm, this.header().height())
+            let set_hei = comutl.getsize(
+                comutl.sizediff(prm, this.header().height())
             );
 	    super.height((0 > set_hei.value()) ? prm : set_hei,opt);
         } catch (e) {
@@ -183,7 +176,9 @@ mf.comp.AppBase = class extends mf.Component {
      * @type parameter
      */
     mainColor (prm, opt) {
-        try { return this.header().baseColor(prm,opt); } catch (e) {
+        try {
+	    return this.header().baseColor(prm,opt);
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
@@ -194,16 +189,17 @@ mf.comp.AppBase = class extends mf.Component {
      *
      * @param (mixed (color)) string: color name, #hex
      *                        array: [red, green, blue, alpha]
-     * @param (option) style option
+     * @param (dict) style option
      * @return (string) color
      * @type parameter
      */
     baseColor (prm, opt) {
-        try { return mf.func.cmpColor(this, 'background', [prm,opt]); } catch (e) {
+        try {
+	    return cmputl.color(this, 'background', prm, opt)
+	} catch (e) {
             console.error(e.stack);
             throw e;
         }
     }
 }
-module.exports = mofron.comp.AppBase;
 /* end of file */
