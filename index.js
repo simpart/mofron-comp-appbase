@@ -6,7 +6,6 @@
  */
 const Header  = require('mofron-comp-appheader');
 const Image   = require('mofron-comp-image');
-const Backgd  = require('mofron-effect-backgd');
 const Synwin  = require('mofron-effect-syncwin');
 const comutl  = mofron.util.common;
 
