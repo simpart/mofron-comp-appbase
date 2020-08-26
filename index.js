@@ -1,13 +1,14 @@
 /**
- * @file   mofron-comp-appbase/index.js
- * @brief  common application component for mofron
- *         it makes easy to build page.
+ * @file mofron-comp-appbase/index.js
+ * @brief common application component for mofron
+ *        it makes easy to build page.
  * @license MIT
  */
 const Header  = require('mofron-comp-appheader');
 const Image   = require('mofron-comp-image');
 const Synwin  = require('mofron-effect-syncwin');
 const comutl  = mofron.util.common;
+const cmputl  = mofron.util.component;
 
 module.exports = class extends mofron.class.Component {
     /**
@@ -22,7 +23,7 @@ module.exports = class extends mofron.class.Component {
     constructor (p1, p2) {
         try {
             super();
-            this.name("AppBase");
+            this.modname("AppBase");
             this.shortForm("title", "child");
 	    
 	    if (0 < arguments.length) {

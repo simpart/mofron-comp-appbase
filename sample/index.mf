@@ -1,7 +1,7 @@
-<require>
+<setting>
     <tag module="mofron-comp-image">Image</tag>
     <tag module="mofron-comp-appbase">AppBase</tag>
-</require>
+</setting>
 
 <AppBase title=AppBase,"./img/logo.png">
     <background>
