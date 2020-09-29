@@ -195,7 +195,12 @@ module.exports = class extends mofron.class.Component {
      */
     baseColor (prm, opt) {
         try {
-	    return cmputl.color(this, 'background', prm, opt)
+	    let buf = this.styleDom();
+	    this.styleDom(this.rootDom()[0]);
+	    let ret = cmputl.color(this, 'background', prm, opt);
+	    this.styleDom(buf);
+	    
+	    return ret;
 	} catch (e) {
             console.error(e.stack);
             throw e;
