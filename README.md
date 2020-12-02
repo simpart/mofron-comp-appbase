@@ -39,7 +39,4 @@ npm install mofron mofron-comp-appbase
 | | mainColor | mixed (color) | string: color name, #hex |
 | | | | array: [red, green, blue, alpha] |
 | | | option | style option |
-| | baseColor | mixed (color) | string: color name, #hex |
-| | | | array: [red, green, blue, alpha] |
-| | | dict | style option |
 

@@ -183,28 +183,5 @@ module.exports = class extends mofron.class.Component {
             throw e;
         }
     }
-    
-    /**
-     * background base color setter/getter
-     *
-     * @param (mixed (color)) string: color name, #hex
-     *                        array: [red, green, blue, alpha]
-     * @param (dict) style option
-     * @return (string) color
-     * @type parameter
-     */
-    baseColor (prm, opt) {
-        try {
-	    let buf = this.styleDom();
-	    this.styleDom(this.rootDom()[0]);
-	    let ret = cmputl.color(this, 'background', prm, opt);
-	    this.styleDom(buf);
-	    
-	    return ret;
-	} catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
 }
 /* end of file */
