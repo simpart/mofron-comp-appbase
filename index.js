@@ -9,6 +9,7 @@ const Image   = require('mofron-comp-image');
 const Synwin  = require('mofron-effect-syncwin');
 const comutl  = mofron.util.common;
 const cmputl  = mofron.util.component;
+const ConfArg = mofron.class.ConfArg;
 
 module.exports = class extends mofron.class.Component {
     /**
@@ -66,13 +67,14 @@ module.exports = class extends mofron.class.Component {
      * @return (mofron-comp-text) app title
      * @type parameter
      */
-    title (prm, img) {
+    title (prm, img, href) {
         try {
             let ret = this.header().title(prm);
             if (undefined === prm) {
                 return ret;
 	    }
 	    this.header().image(img);
+	    this.header().url(href);
         } catch (e) {
             console.error(e.stack);
             throw e;
@@ -178,6 +180,21 @@ module.exports = class extends mofron.class.Component {
     mainColor (prm, opt) {
         try {
 	    return this.header().baseColor(prm,opt);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+
+    baseColor (prm,opt) {
+        try {
+            if (undefined !== prm) {
+                this.background(
+                    new mofron.class.Component({
+                        baseColor: new ConfArg(prm,opt)
+                    })
+                );
+            }
 	} catch (e) {
             console.error(e.stack);
             throw e;
