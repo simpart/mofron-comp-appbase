@@ -200,5 +200,14 @@ module.exports = class extends mofron.class.Component {
             throw e;
         }
     }
+
+    accentColor (prm,opt) {
+        try {
+            return this.header().mainColor(prm,opt);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
 }
 /* end of file */
